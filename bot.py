@@ -17,6 +17,7 @@ API_URL0 = "https://k1pool.com/api/stats/btcz"
 TOMARS = "https://btcz.2mars.biz/api/stats"
 DARK = "https://btcz.darkfibermines.com/api/stats"
 ZERG = "https://zergpool.com/api/currencies"
+ZERO = "https://zeropool.io/stats"
 
 
 if TOKEN is None:
@@ -43,6 +44,7 @@ async def stats(ctx: Interaction):
     response2mars = requests.get(TOMARS)
     responsedark = requests.get(DARK)
     responsezerg = requests.get(ZERG)
+    responsezero = requests.get(ZERO)
 
     if response.status_code == 200:
         data = response.json()
@@ -67,9 +69,14 @@ async def stats(ctx: Interaction):
             network_diff = data0["networkDiff"]
             network_hashrate = data0["networkSpeedStr"]
             workersk1 = data0["minersTotal"]
+            
         if response2mars.status_code == 200:
             data2mars = response2mars.json()
             workers2mars = data2mars["global"]["workers"]
+
+        if responsezero.status_code == 200:
+            datazero = responsezero.json()
+            workerzero = datazero["global"]["workerCount"]
         
         if responsedark.status_code == 200:
             datadark = responsedark.json()
@@ -81,7 +88,7 @@ async def stats(ctx: Interaction):
         else:
             workerszerg = 0
 
-        totalworkers = (workersk1 + workersdark + workers2mars + workerszerg)
+        totalworkers = (workersk1 + workersdark + workers2mars + workerszerg + workerzero)
         
         embed = Embed(
             title="BitcoinZ Stats : [ Coingecko ]",
